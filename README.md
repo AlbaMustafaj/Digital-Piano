@@ -1,6 +1,8 @@
 # Digital-Piano
 Bilkent University
+
 This is a 2 people group project for Digital Design223 Fall 2016.
+
 Partners: Alba Mustafaj, Elena Cina
 
 The main feature of the project is sound producing by giving the input to the keyboard
