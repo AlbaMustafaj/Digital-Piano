@@ -1,0 +1,66 @@
+
+module clk_shrink(input logic clk, logic [17:0] value , output logic audio  );// value = wavelength
+logic [17:0] counter;
+logic [17:0] getC; // avoid multi-driven ports
+
+//counteri duhet per t kaluar nga 0 ne 1 vazhdimisht dhe t prodhohet dingulli
+always @(posedge clk)
+     if (counter>1)
+         begin
+             getC--;
+         end
+     else
+         begin
+             getC <= value; // ajo vlera 17 bitsh futet tek getC dhe aty posht e merr counteri
+         end
+		 
+always@(posedge clk)
+    if (counter == 0)
+        begin
+             counter <= getC; 
+             audio <= ~audio; 
+        end
+        else 
+            counter <= getC;
+endmodule
+
+module clk_conv(input logic clk,input logic [26:0]size, output logic newClk);
+    logic [26:0] count, nextcount; 
+    logic [26:0] saveCount, saveNextCount;
+    logic outClk;
+ 
+    // initialize values to zero
+    initial 
+       begin
+            saveCount <= 0;
+            outClk <= 0; 
+       end    
+       
+    always_ff @(posedge clk)
+    begin
+       if(saveCount == size)
+        begin
+            saveCount <= 0;
+            outClk <= ~outClk;
+        end
+        else if(saveCount == size / 2)
+            begin
+                saveCount <= saveNextCount;
+                outClk <= ~outClk;
+            end
+        else
+            begin
+                saveCount <= saveNextCount;
+            end      
+     end
+
+   always@(posedge clk)
+      begin
+         count <= saveCount;
+         nextcount <= saveNextCount;
+         newClk <= outClk;
+      end
+
+always_comb
+    saveNextCount = saveCount + 1;
+endmodule
