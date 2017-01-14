@@ -1,9 +1,6 @@
 # Digital-Piano
 Bilkent University
-
-This is a 2 people group project for Digital Design223 Fall 2016.
-
-Partners: Alba Mustafaj, Elena Cina
+Alba Mustafaj
 
 The main feature of the project is sound producing by giving the input to the keyboard
 of BETI board and displaying the sound according to the pertaining frequency in the 
