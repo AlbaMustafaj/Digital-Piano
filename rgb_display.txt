@@ -1,0 +1,178 @@
+module rgb_display(input  logic CLK,
+                   input  logic [5:0] keyCode, // coordinates from keyobard
+                   output logic [2:0] rowCode, 
+                   output logic str_clk, shift_clk, enable, reset, 
+                   output logic data);
+  
+       logic [23:0] reg_green_blue;
+       logic [7:0]count;
+       logic in;
+       logic [26:0] size;
+       
+       
+       
+       
+       always@*
+       begin 
+          enable = 1'b0;
+          reset <= 1'b1;
+          // comments about size value
+          // used to genereate a compatible shift register clock pulse,
+          // we generated this by testing as we couldn't find the correect value on any data sheet 
+          size = 27'b000000000000000011110100011; 
+       end
+       
+       initial begin
+       //initialize values to the initial state
+           rowCode <= 3'b000; //initially rows given 0 (off value)
+           reg_green_blue <= 24'b00000000_0000000_00000000; // columns given no color
+           data <= 1'b0; // in-i ndryshon gjithmone dhe data updatohet me vleren e in-it
+           in <= 1'b0; //hold data for "data" logic
+           str_clk <= 1'b0; // storage register clock pulse 
+           count = 8'd1;
+           
+          
+       end
+       
+      // this block of code regulates which of the lighs on the RGB Matrix should be on
+      always@*
+      case(keyCode ) // == coordinates
+      16'd1: 
+      begin
+           rowCode <= 3'b100; //merr energji kolona 1
+           reg_green_blue <=  24'b00000000_00000001_00000001;
+      end      
+      16'd2: 
+      begin
+           rowCode <= 3'b100;
+           reg_green_blue <=  24'b00000000_00000011_00000011;
+      end
+      16'd3: 
+      begin
+           rowCode <= 3'b100;
+           reg_green_blue <=  24'b00000000_00000111_00000111;
+      end
+      16'd4:
+      begin
+           rowCode <= 3'b100;
+           reg_green_blue <=  24'b00000000_00001111_00001111;
+      end
+      16'd5: 
+      begin
+           rowCode <= 3'b100;
+           reg_green_blue <=  24'b00000000_00011111_00011111;
+      end
+     16'd6: 
+     begin
+           rowCode <= 3'b100;
+           reg_green_blue <=  24'b00000000_001111111_00111111;
+     end
+     16'd7: 
+     begin
+           rowCode <= 3'b100;
+           reg_green_blue <=  24'b00000000_01111111_01111111;
+     end
+     // a2 to g2
+     16'd8:
+     begin
+           rowCode <= 3'b010;
+           reg_green_blue <=  24'b00000000_00000001_00000000;
+      end
+      16'd9:
+       begin
+           rowCode <= 3'b010;
+           reg_green_blue <=  24'b00000000_00000011_00000000;
+      end
+      16'd10: 
+      begin
+           rowCode<= 3'b010;
+           reg_green_blue <=  24'b00000000_00000111_00000000;
+       end
+       16'd11: begin
+           rowCode <= 3'b010;
+           reg_green_blue <=  24'b00000000_00001111_00000000;
+       end
+       16'd12:
+        begin
+           rowCode <= 3'b010;
+           reg_green_blue <=  24'b00000000_00011111_00000000;
+         end
+       16'd13:
+       begin
+           rowCode <= 3'b010;
+           reg_green_blue <=  24'b00000000_00111111_00000000;
+       end
+       16'd14: 
+       begin
+           rowCode <= 3'b010;
+           reg_green_blue <=  24'b00000000_01111111_00000000;
+       end
+       16'd15: 
+       begin
+           rowCode <= 3'b001;
+           reg_green_blue <=  24'b00000001_00000000_00000001;
+       end
+       // a3 b3
+      16'd16:
+      begin
+           rowCode <= 3'b001;
+           reg_green_blue <=  24'b00000011_00000000_00000011;
+      end
+      16'd17: 
+      begin
+           rowCode <= 3'b000;
+           reg_green_blue <=  24'b00000000_00000000_0000000;
+      end
+      default :
+          begin
+           rowCode <= 3'b000;
+           reg_green_blue <=  24'b00000000_00000000_0000000;
+          end
+      endcase
+      
+
+always_ff @(posedge shift_clk) begin
+   case(count)
+    0:  in <= reg_green_blue[count]; //0  out = 24'b 1000000_0000000_000000 //rrin t ndezura seps divideri esht sh i shpejte
+    1:  in <= reg_green_blue[count]; //1  reg_green_blue = 24'b 1100000_0000000_000000
+    2:  in <= reg_green_blue[count];
+    3:  in <= reg_green_blue[count];
+    4:  in <= reg_green_blue[count];
+    5:  in <= reg_green_blue[count];
+    6:  in <= reg_green_blue[count];
+    7:  in <= reg_green_blue[count];
+    8:  in <= reg_green_blue[count];
+    9:  in <= reg_green_blue[count];
+    10: in <= reg_green_blue[count];
+    11: in <= reg_green_blue[count];
+    12: in <= reg_green_blue[count];
+    13: in <= reg_green_blue[count];
+    14: in <= reg_green_blue[count];
+    15: in <= reg_green_blue[count];
+    16: in <= reg_green_blue[count];
+    17: in <= reg_green_blue[count];
+    18: in <= reg_green_blue[count];
+    19: in <= reg_green_blue[count];
+    20: in <= reg_green_blue[count];
+    21: in <= reg_green_blue[count];
+    22: in <= reg_green_blue[count];
+    23: in <= reg_green_blue[count];
+    24: in <= 1'b1;
+   
+   endcase
+   
+   if(count <= 8'd24 && count >= 8'd0) begin
+        str_clk <= 1'b0; //behet 0 cdo here qe t shkoje tek positive edge dhe t kaloje nga 0 n 1  2 3 etj
+        count <= count + 1;      
+   end
+
+   else begin
+        str_clk <= 1'b1; // behet 0 dhe fillon pjesa lart prap qe mos t fiket drita
+        count <= 8'd0;
+   end
+
+   data <= in;
+  end
+  
+  clk_conv c1(CLK, size, shift_clk);
+endmodule
