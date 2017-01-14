@@ -1,0 +1,43 @@
+module speakerModule(   input logic clk,input logic [15:0] note,output logic audio  );
+    
+    logic [17:0] waveLength; // to hhold the wavelength which is calculated 100000000 / freq /2
+    clk_shrink sh (clk, waveLength, audio ); // generate   
+    
+    always@*
+      //case (note)// {in3, in2, in1, in0}
+        // These values are wave lengths of notes with respect to time (10 nano sec)
+        // value = 100,000,000 / frequency of notes / 2
+               if (note == 16'b1010_0010_0010_0001)
+                      waveLength=  227273;   //A3
+               else if (note == 16'b1011_0010_0100_0110)
+                      waveLength=  202478;   //B3
+               else if (note == 16'b1100_0010_0110_0001)
+                      waveLength =  191113;   //C4
+               else if (note == 16'b1101_0010_1001_0011)
+                      waveLength= 170262;   //D4
+               else if (note == 16'b1110_0011_0010_1001)
+                      waveLength = 151685;   //E4
+               else if ( note == 16'b1111_0011_0100_1001)
+                      waveLength = 143172;   //F400
+               else if ( note == 16'b0000_0011_1001_0010)
+                     waveLength = 127553;   //G4
+               else if ( note ==16'b1010_0100_0100_0001)
+                     waveLength = 113636;   //A4
+               else if ( note ==16'b1011_0100_1001_0011)
+                      waveLength = 101238;   //B4
+               else if ( note == 16'b1100_0101_0010_0011)
+                     waveLength = 95557;    //C5
+               else if ( note ==16'b1101_0101_1000_0111)
+                     waveLength = 85131;    //D5
+               else if ( note == 16'b1110_0110_0101_1001)
+                     waveLength = 75843;    //E5
+               else if ( note ==16'b1111_0110_1001_1000)
+                     waveLength = 71587;    //F5
+               else if ( note == 16'b0000_0111_1000_0011)
+                    waveLength = 63776;    //G5
+               else if ( note == 16'b1010_1000_1000_0001)
+                    waveLength = 56818;    //A5
+               else if ( note == 16'b1011_1001_1000_0111)
+                    waveLength= 50619;    //B5
+     
+endmodule
