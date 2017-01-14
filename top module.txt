@@ -1,0 +1,29 @@
+module top_module ( input  logic clk, 
+                    input  logic [3:0] kin,
+                    output logic [3:0] kout,    
+                    output logic, 
+                    output logic [3:0] an,
+                    output logic a,b,c,d,e,f,g,dp,
+                    output logic [7:0] leds,  
+                    output logic [2:0]rowCode,
+                    output logic str_clk, shift_clk, enable, reset,  
+                    output logic data);
+		
+    logic audio;
+    logic [5:0] coordinate;
+    logic [3:0] in3, in2, in1, in0; // [ Letter, hundreds, tens, digits ] [example A 2 2 1 ] 
+    
+    keyboard          scanner4x4    (clk, kin, kout, in0, in1, in2, in3, coordinate, leds);
+    rgb_display       RGB           (clk, coordinate, rowCode, str_clk, shift_clk, enable, reset,data);
+    segmentController controsoundBitl       (clk, in0, in1, in2, in3,a, b, c, d, e, f, g, dp, an);
+    speakerModule     audioGenerator(clk, {in3,in2,in1,in0}, audio);        
+                 
+
+     always_comb
+       // if(leds ==8'b00010001 | leds == 8'b00010010 | leds == 8'b00010100 | leds ==8'b00011000 | leds == 8'b00100001 | leds ==8'b00100010 | leds == 8'b00100100 | leds == 8'b00101000 | leds ==8'b01000001 | leds ==8'b01000010 | leds ==8'b01000100 | leds ==8'b01001000 | leds == 8'b10000001 | leds == 8'b10000010 | leds ==8'b10000100 | leds ==8'b10001000  ) // in case one button was pressed give soundBit audio value
+        if (|leds)
+             soundBit <= audio;
+         else  // else stay SILENT
+             soundBit <= 0;
+  
+endmodule
