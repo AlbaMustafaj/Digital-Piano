@@ -26,7 +26,7 @@ top_module
 keyboard
 - Function: This module translates the button press of 4x4 Button Matrix 
   on Beti Board into proper signals which we will be needed in other modules
-- Timing constrains: We put a 20bit counter to divide the basys3 clock and
+- Timing constrains:  A 20bit counter is put to divide the basys3 clock and
   generate one with a frequency about 40Hz.
 - Description: This module takes input from the Beti board keyboard and generates
   several outputs. Concretely, a 4 bit value which indicates the location of the button
@@ -63,6 +63,6 @@ rgb_display
   from the top module to this module to indicate the note that is being played. It takes a 3 bit input from 
   the top module which indicates the rows that will be lightened. Furthermore, a 3 bit output corresponds to 
   the column which will be lightened (since we only use 3 columns for our 3 octaves) depending on the note. 
-  There is also an inner 24 bit logic which controls the colors of lights to be turned on ( we have chosen blue,
+  There is also an inner 24 bit logic which controls the colors of lights to be turned on ( the colors  chosen are blue,
   green and purple) in each column. The above mentioned high frequency of the clock is necessary in order for the
   consecutive lights to turn on rapidly without the previous one turning off, so that the visualization is better.
